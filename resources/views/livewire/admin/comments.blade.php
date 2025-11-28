@@ -14,15 +14,15 @@
                 <div class="d-flex gap-2">
                     <button type="button" wire:click="$set('filterStatus', 'all')"
                         class="btn btn-sm {{ $filterStatus === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
-                        All
+                        Semua
                     </button>
                     <button type="button" wire:click="$set('filterStatus', 'visible')"
                         class="btn btn-sm {{ $filterStatus === 'visible' ? 'btn-success' : 'btn-outline-success' }}">
-                        Unhidden
+                        Tampil
                     </button>
                     <button type="button" wire:click="$set('filterStatus', 'hidden')"
                         class="btn btn-sm {{ $filterStatus === 'hidden' ? 'btn-danger' : 'btn-outline-danger' }}">
-                        Hidden
+                        Disembunyikan
                     </button>
                 </div>
             </div>
@@ -46,9 +46,9 @@
                                 <td>{{ Str::limit($comment->content, 40) }}</td>
                                 <td>
                                     @if ($comment->is_hidden)
-                                        <span class="badge bg-danger">Hidden</span>
+                                        <span class="badge bg-danger">disembunyikan</span>
                                     @else
-                                        <span class="badge bg-success">Unhidden</span>
+                                        <span class="badge bg-success">Tampil</span>
                                     @endif
                                 </td>
                                 <td class="text-center">
@@ -62,14 +62,14 @@
                                                 <li>
                                                     <button class="dropdown-item text-primary"
                                                         onclick="confirmToggle({{ $comment->id }}, false)">
-                                                        <i class="bi bi-eye me-1 text-primary"></i> Unhide
+                                                        <i class="bi bi-eye me-1 text-primary"></i> Tampilkan
                                                     </button>
                                                 </li>
                                             @else
                                                 <li>
                                                     <button class="dropdown-item text-danger"
                                                         onclick="confirmToggle({{ $comment->id }}, true)">
-                                                        <i class="bi bi-eye-slash me-1"></i> Hide
+                                                        <i class="bi bi-eye-slash me-1"></i> Sembunyikan
                                                     </button>
                                                 </li>
                                             @endif
@@ -79,7 +79,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted">Tidak ada komentar ditemukan.</td>
+                                <td colspan="6" class="text-center text-muted">Tidak ada komentar yang ditemukan.</td>
                             </tr>
                         @endforelse
                     </tbody>

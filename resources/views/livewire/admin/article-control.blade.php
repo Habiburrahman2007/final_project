@@ -10,7 +10,7 @@
                 <i class="fas fa-filter"></i> {{ $category }}
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#" wire:click.prevent="setCategory('All')">All</a></li>
+                <li><a class="dropdown-item" href="#" wire:click.prevent="setCategory('All')">Semua</a></li>
                 @foreach ($categories as $cat)
                     <li>
                         <a class="dropdown-item" href="#" wire:click.prevent="setCategory('{{ $cat }}')">
@@ -26,9 +26,9 @@
                 <i class="fas fa-toggle-on"></i> {{ ucfirst($status) }}
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#" wire:click.prevent="setStatus('All')">All</a></li>
-                <li><a class="dropdown-item" href="#" wire:click.prevent="setStatus('active')">Active</a></li>
-                <li><a class="dropdown-item" href="#" wire:click.prevent="setStatus('banned')">Banned</a></li>
+                <li><a class="dropdown-item" href="#" wire:click.prevent="setStatus('All')">Semua</a></li>
+                <li><a class="dropdown-item" href="#" wire:click.prevent="setStatus('active')">Aktif</a></li>
+                <li><a class="dropdown-item" href="#" wire:click.prevent="setStatus('banned')">Terblokir</a></li>
             </ul>
         </div>
     </div>

@@ -31,9 +31,9 @@ class UserControl extends Component
         $this->resetPage();
     }
 
-    public function toggleBanned($userId)
+    public function toggleBanned($id)
     {
-        $user = User::find($userId);
+        $user = User::find($id);
         if ($user) {
             $user->banned = !$user->banned;
             $user->save();

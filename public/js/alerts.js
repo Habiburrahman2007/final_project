@@ -1,9 +1,3 @@
-// ==============================
-// SweetAlert Helper Functions
-// ==============================
-// ==============================
-// SweetAlert Helper Functions
-// ==============================
 window.showSuccess = function (message, config = {}) {
     Swal.fire({
         title: message.title || 'Berhasil!',
@@ -89,11 +83,11 @@ window.confirmDeleteCategory = function (categoryId) {
 
 window.confirmToggleStatus = function (articleId, action) {
     Swal.fire({
-        title: action === 'banned' ? 'Ban artikel ini?' : 'Aktifkan artikel ini?',
+        title: action === 'banned' ? 'Blokir artikel ini?' : 'Aktifkan artikel ini?',
         text: "Tindakan ini akan mengubah status artikel.",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: action === 'banned' ? 'Ya, Ban!' : 'Ya, Aktifkan!',
+        confirmButtonText: action === 'banned' ? 'Ya, Blokir!' : 'Ya, Aktifkan!',
         confirmButtonColor: action === 'banned' ? '#d33' : '#28a745',
         cancelButtonText: 'Batal'
     }).then(result => {
@@ -122,28 +116,11 @@ window.confirmToggle = function (commentId, hide) {
     });
 }
 
-
-
-// ===================================================
-// INIT SweetAlert Events (dibungkus supaya hidup ulang)
-// ===================================================
 window.initAlerts = function () {
     if (typeof Livewire === 'undefined') {
         console.warn('Livewire is not defined yet.');
         return;
     }
-
-    // Listener untuk event yang dikirim Livewire
-    // Gunakan try-catch atau cek apakah listener sudah ada jika perlu, 
-    // tapi Livewire.on biasanya aman ditumpuk (akan double listener jika tidak dibersihkan, 
-    // tapi untuk kasus ini kita asumsikan initAlerts dipanggil sekali per load/navigasi).
-    // Namun, Livewire 3 membersihkan listener di antara navigasi jika komponen di-refresh, 
-    // tapi untuk global listener di window, kita harus hati-hati.
-    // Best practice: init sekali saat load, dan re-attach jika perlu.
-
-    // Kita hapus listener lama jika memungkinkan, atau biarkan Livewire menanganinya.
-    // Livewire.on returns a cleanup function in v3? Let's check docs or assume standard behavior.
-    // For simplicity, let's just re-register.
 
     Livewire.on('userStatusUpdated', msg => showSuccess({ text: msg }));
     Livewire.on('categoryDeleted', msg => showSuccess({ text: msg }));

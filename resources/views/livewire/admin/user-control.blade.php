@@ -19,15 +19,15 @@
                         <div class="d-flex flex-wrap gap-2" role="group" aria-label="Filter user">
                             <button type="button" wire:click="$set('filterStatus', 'all')"
                                 class="btn btn-sm {{ $filterStatus === 'all' ? 'btn-primary' : 'btn-outline-primary' }}">
-                                All
+                                Semua
                             </button>
                             <button type="button" wire:click="$set('filterStatus', 'active')"
                                 class="btn btn-sm {{ $filterStatus === 'active' ? 'btn-success' : 'btn-outline-success' }}">
-                                Active
+                                Aktif
                             </button>
                             <button type="button" wire:click="$set('filterStatus', 'banned')"
                                 class="btn btn-sm {{ $filterStatus === 'banned' ? 'btn-danger' : 'btn-outline-danger' }}">
-                                Banned
+                                Terblokir
                             </button>
                         </div>
                     </nav>
