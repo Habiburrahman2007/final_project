@@ -19,16 +19,8 @@
                                         <input class="form-control form-control-sm" id="formFileSm" type="file"
                                             wire:model="image"
                                             accept="image/png, image/jpeg, image/jpg, image/webp, image/gif">
-                                        @if ($image && !$errors->has('image'))
-                                            @try
-                                                <div class="mt-3">
-                                                    <img src="{{ $image->temporaryUrl() }}" alt="Preview"
-                                                        class="img-thumbnail" style="max-height: 200px;">
-                                                </div>
-                                                @catch(\Exception $e)
-                                                <div class="mt-2 text-muted"><small>Preview tidak tersedia</small></div>
-                                            @endtry
-                                        @endif
+                                        <img src="{{ $image->temporaryUrl() }}" alt="Preview" class="img-thumbnail"
+                                            style="max-height: 200px;">
                                         @error('image')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror

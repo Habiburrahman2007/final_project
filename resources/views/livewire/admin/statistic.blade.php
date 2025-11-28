@@ -153,59 +153,10 @@
     <script>
         // 1. Variabel Global untuk menyimpan instance chart
         // Disimpan di luar fungsi agar bisa di-destroy saat navigasi
-        let barChart = null;
+
         let pieChart = null;
 
-        function createBarChart() {
-            // A. Ambil Elemen Bar Chart
-            const chartElement = document.querySelector("#categoryChart");
 
-            // B. SAFETY CHECK: Jika elemen tidak ditemukan, BERHENTI.
-            // Ini mencegah error "Element not found" yang bikin Livewire reload
-            if (!chartElement) {
-                return;
-            }
-
-            // C. Bersihkan chart lama jika ada (Mencegah duplikat/memory leak)
-            if (barChart) {
-                barChart.destroy();
-            }
-
-            const options = {
-                chart: {
-                    type: 'bar',
-                    height: 400
-                },
-                series: [{
-                    name: 'Jumlah Artikel',
-                    // Menggunakan null coalescing (??) agar aman jika data null
-                    data: @json($categoryArticleCounts ?? [])
-                }],
-                xaxis: {
-                    categories: @json($categoryNames ?? []),
-                    labels: {
-                        rotate: -45
-                    }
-                },
-                colors: @json($categoryColors ?? ['#2563EB']),
-                title: {
-                    text: 'Jumlah Artikel per Kategori',
-                    align: 'center'
-                },
-                plotOptions: {
-                    bar: {
-                        distributed: true
-                    }
-                },
-                legend: {
-                    show: false
-                }
-            };
-
-            // D. Render Chart Baru
-            barChart = new ApexCharts(chartElement, options);
-            barChart.render();
-        }
 
         function createPieChart() {
             // A. Ambil Elemen Pie Chart
@@ -252,7 +203,7 @@
 
         // Fungsi Wrapper untuk inisialisasi semua chart
         function initCharts() {
-            createBarChart();
+
             createPieChart();
         }
 
