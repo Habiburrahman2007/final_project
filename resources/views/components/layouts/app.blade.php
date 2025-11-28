@@ -89,6 +89,18 @@
             transform: scale(1.03);
             box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.15);
         }
+
+
+        .dark .trix-button {
+            background-color: white !important;
+            border-radius: 4px;
+            margin: 1px;
+        }
+
+        .dark .trix-button.trix-active {
+            background-color: #e5e7eb !important;
+            /* gray-200 */
+        }
     </style>
     @livewireStyles
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" data-navigate-once="true"></script>
@@ -322,12 +334,16 @@
 
     {{-- Link JS Mazer --}}
     <script src="{{ asset('dist/assets/static/js/components/dark.js') }}" data-navigate-once="true"></script>
-    <script src="{{ asset('dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}" data-navigate-once="true"></script>
+    <script src="{{ asset('dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"
+        data-navigate-once="true"></script>
     <script src="{{ asset('dist/assets/compiled/js/app.js') }}" data-navigate-once="true"></script>
     <script src="{{ asset('dist/assets/extensions/apexcharts/apexcharts.min.js') }}" data-navigate-once="true"></script>
-    <script src="{{ asset('dist/assets/static/js/pages/dashboard.js') }}?v={{ time() }}" data-navigate-once="true"></script>
-    <script src="{{ asset('dist/assets/extensions/simple-datatables/umd/simple-datatables.js') }}" data-navigate-once="true"></script>
-    <script src="{{ asset('dist/assets/extensions/simple-datatables/umd/simple-datatables.js') }}" data-navigate-once="true"></script>
+    <script src="{{ asset('dist/assets/static/js/pages/dashboard.js') }}?v={{ time() }}" data-navigate-once="true">
+    </script>
+    <script src="{{ asset('dist/assets/extensions/simple-datatables/umd/simple-datatables.js') }}"
+        data-navigate-once="true"></script>
+    <script src="{{ asset('dist/assets/extensions/simple-datatables/umd/simple-datatables.js') }}"
+        data-navigate-once="true"></script>
     {{-- Link JS text editor --}}
     <script type="text/javascript" src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script>
     <script>

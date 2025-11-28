@@ -19,8 +19,10 @@
                                         <input class="form-control form-control-sm" id="formFileSm" type="file"
                                             wire:model="image"
                                             accept="image/png, image/jpeg, image/jpg, image/webp, image/gif">
-                                        <img src="{{ $image->temporaryUrl() }}" alt="Preview" class="img-thumbnail"
-                                            style="max-height: 200px;">
+                                        @if ($image)
+                                            <img src="{{ $image->temporaryUrl() }}" alt="Preview" class="img-thumbnail"
+                                                style="max-height: 200px;">
+                                        @endif
                                         @error('image')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -54,7 +56,7 @@
                                 <div class="col-12 mb-4" wire:ignore>
                                     <label class="form-label">Isi artikel</label>
                                     <input id="x" type="hidden" wire:model="content">
-                                    <div class="bg-white">
+                                    <div class="">
                                         <trix-editor input="x" class="form-control"></trix-editor>
                                     </div>
                                 </div>

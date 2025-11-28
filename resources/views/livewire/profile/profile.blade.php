@@ -193,7 +193,7 @@
                 @endforeach
             </div>
             <div class="text-center mt-4">
-                @if ($totalArticles > count($articles))
+                @if ($totalFiltered > count($articles))
                     <div x-intersect.full="$wire.loadMore()" class="d-flex justify-content-center py-4">
                         <div wire:loading wire:target="loadMore" class="text-primary">
                             <i class="fa fa-spinner fa-spin fa-2x"></i>
