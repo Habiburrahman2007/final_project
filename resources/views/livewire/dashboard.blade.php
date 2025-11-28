@@ -3,23 +3,24 @@
         <div class="input-group w-100 mb-3 d-flex flex-column flex-md-row align-items-start align-items-md-center">
             <input type="text" class="form-control me-2 w-100 w-md-50" placeholder="Cari judul atau penulis..."
                 id="search-input" wire:model.live.debounce.300ms="search" style="height: 38px;" />
-            <div class="btn-group my-1 mt-md-3">
-                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="fas fa-filter"></i> {{ $category }}
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#" wire:click.prevent="setCategory('All')">All</a></li>
+            <nav class="w-100 mt-2 overflow-x-auto pb-2">
+                <div class="d-flex flex-nowrap gap-2" role="group" aria-label="Filter category">
+                    <button type="button" wire:click.prevent="setCategory('All')"
+                        class="btn btn-sm {{ $category === 'All' ? 'btn-white' : 'btn-outline-white' }}">
+                        All
+                    </button>
                     @foreach ($categories as $cat)
-                        <li>
-                            <a class="dropdown-item" href="#"
-                                wire:click.prevent="setCategory('{{ $cat }}')">
-                                {{ $cat }}
-                            </a>
-                        </li>
+                        @php
+                            $color = str_replace('bg-', '', $cat->color);
+                            $btnClass = $category === $cat->name ? "btn-$color" : "btn-outline-$color";
+                        @endphp
+                        <button type="button" wire:click.prevent="setCategory('{{ $cat->name }}')"
+                            class="btn btn-sm {{ $btnClass }}">
+                            {{ $cat->name }}
+                        </button>
                     @endforeach
-                </ul>
-            </div>
+                </div>
+            </nav>
         </div>
     </div>
 

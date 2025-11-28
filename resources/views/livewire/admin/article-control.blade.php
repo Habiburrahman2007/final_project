@@ -5,32 +5,41 @@
                 wire:model.live="search" />
         </div>
 
-        <div class="btn-group">
-            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-filter"></i> {{ $category }}
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#" wire:click.prevent="setCategory('All')">Semua</a></li>
+        <nav class="w-100 mt-2 overflow-x-auto pb-2">
+            <div class="d-flex flex-nowrap gap-2" role="group" aria-label="Filter category">
+                <button type="button" wire:click.prevent="setCategory('All')"
+                    class="btn btn-sm {{ $category === 'All' ? 'btn-dark' : 'btn-outline-dark' }}">
+                    Semua
+                </button>
                 @foreach ($categories as $cat)
-                    <li>
-                        <a class="dropdown-item" href="#" wire:click.prevent="setCategory('{{ $cat }}')">
-                            {{ $cat }}
-                        </a>
-                    </li>
+                    @php
+                        $color = str_replace('bg-', '', $cat->color);
+                        $btnClass = $category === $cat->name ? "btn-$color" : "btn-outline-$color";
+                    @endphp
+                    <button type="button" wire:click.prevent="setCategory('{{ $cat->name }}')"
+                        class="btn btn-sm {{ $btnClass }}">
+                        {{ $cat->name }}
+                    </button>
                 @endforeach
-            </ul>
-        </div>
+            </div>
+        </nav>
 
-        <div class="btn-group">
-            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-toggle-on"></i> {{ ucfirst($status) }}
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#" wire:click.prevent="setStatus('All')">Semua</a></li>
-                <li><a class="dropdown-item" href="#" wire:click.prevent="setStatus('active')">Aktif</a></li>
-                <li><a class="dropdown-item" href="#" wire:click.prevent="setStatus('banned')">Terblokir</a></li>
-            </ul>
-        </div>
+        <nav class="w-100 mt-2">
+            <div class="d-flex flex-wrap gap-2" role="group" aria-label="Filter status">
+                <button type="button" wire:click="setStatus('All')"
+                    class="btn btn-sm {{ $status === 'All' ? 'btn-primary' : 'btn-outline-primary' }}">
+                    Semua
+                </button>
+                <button type="button" wire:click="setStatus('active')"
+                    class="btn btn-sm {{ $status === 'active' ? 'btn-success' : 'btn-outline-success' }}">
+                    Aktif
+                </button>
+                <button type="button" wire:click="setStatus('banned')"
+                    class="btn btn-sm {{ $status === 'banned' ? 'btn-danger' : 'btn-outline-danger' }}">
+                    Terblokir
+                </button>
+            </div>
+        </nav>
     </div>
 
     @if ($articles->isEmpty())

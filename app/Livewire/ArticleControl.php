@@ -40,7 +40,7 @@ class ArticleControl extends Component
 
     public function loadCategories()
     {
-        $this->categories = Category::pluck('name')->toArray();
+        $this->categories = Category::all();
     }
 
     public function searchPost()

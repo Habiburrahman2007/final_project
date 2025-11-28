@@ -32,13 +32,23 @@ class Statistic extends Component
         'bg-primary' => 'Biru',
     ];
 
+    protected $hexColors = [
+        'bg-primary' => '#435ebe',
+        'bg-secondary' => '#6c757d',
+        'bg-success' => '#198754',
+        'bg-danger' => '#dc3545',
+        'bg-warning' => '#ffc107',
+        'bg-info' => '#0dcaf0',
+        'bg-dark' => '#212529',
+    ];
+
     public function mount()
     {
         $this->calculateTotals();
         $this->loadChartData();
         $this->popularArticles = Article::where('status', 'active')
             ->with(['category:id,name,color', 'user:id,name'])
-            ->withCount('likes') 
+            ->withCount('likes')
             ->orderByDesc('likes_count')
             ->take(5)
             ->get();
@@ -56,8 +66,8 @@ class Statistic extends Component
     public function loadChartData()
     {
         $categories = Category::withCount(['articles' => function ($query) {
-                $query->where('status', 'active');
-            }])
+            $query->where('status', 'active');
+        }])
             ->having('articles_count', '>', 0) // Hanya kategori dengan artikel
             ->orderBy('articles_count', 'desc')
             ->limit(10) // Batasi 10 kategori teratas
@@ -65,7 +75,9 @@ class Statistic extends Component
 
         $this->categoryNames = $categories->pluck('name')->toArray();
         $this->categoryArticleCounts = $categories->pluck('articles_count')->toArray();
-        $this->categoryColors = $categories->pluck('color')->toArray();
+        $this->categoryColors = $categories->pluck('color')->map(function ($color) {
+            return $this->hexColors[$color] ?? '#6c757d';
+        })->toArray();
     }
 
     public function render()

@@ -179,6 +179,7 @@
                 },
                 series: @json($categoryArticleCounts ?? []),
                 labels: @json($categoryNames ?? []),
+                colors: @json($categoryColors ?? []),
                 legend: {
                     position: 'bottom',
                     formatter: function(seriesName, opts) {

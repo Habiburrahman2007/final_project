@@ -40,7 +40,7 @@ class UserControl extends Component
         }
         $this->dispatch(
             'userStatusUpdated',
-            $user->is_banned
+            $user->banned
                 ? 'Pengguna berhasil diblokir.'
                 : 'Pengguna berhasil diaktifkan kembali.'
         );
