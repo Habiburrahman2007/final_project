@@ -79,7 +79,8 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted">Tidak ada komentar yang ditemukan.</td>
+                                <td colspan="6" class="text-center text-muted">Tidak ada komentar yang ditemukan.
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>

@@ -106,8 +106,7 @@
                 <ul class="pagination pagination-primary mb-0 justify-center">
 
                     <li class="page-item {{ $users->onFirstPage() ? 'disabled' : '' }}">
-                        <a class="page-link"
-                            href="{{ $users->onFirstPage() ? '#' : $users->previousPageUrl() }}" 
+                        <a class="page-link" href="{{ $users->onFirstPage() ? '#' : $users->previousPageUrl() }}"
                             @if (!$users->onFirstPage()) wire:navigate @endif>
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
@@ -123,14 +122,13 @@
                     @endforeach
 
                     <li class="page-item {{ $users->hasMorePages() ? '' : 'disabled' }}">
-                        <a class="page-link"
-                            href="{{ $users->hasMorePages() ? $users->nextPageUrl() : '#' }}" 
+                        <a class="page-link" href="{{ $users->hasMorePages() ? $users->nextPageUrl() : '#' }}"
                             @if ($users->hasMorePages()) wire:navigate @endif>
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </li>
 
-                    </ul>
+                </ul>
             </div>
         </div>
     </section>

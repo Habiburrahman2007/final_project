@@ -14,11 +14,11 @@
     <div class="grid min-h-screen grid-cols-1 lg:grid-cols-2">
         <!-- Left Section: Text -->
         <div class="px-4py-8 flex flex-col items-center justify-center justify-self-center text-center">
-            <h1 class="text-base-content text-blue-700 mb-2 text-5xl font-semibold">Walawe...</h1>
-            <h4 class="text-base-content mb-2 text-2xl font-semibold">Gak ada apa-apa disini le</h4>
-            <p class="text-base-content mb-6 max-w-sm">
-                Halaman yang anda cari tidak ditemukan, silahkan kembali ke halaman utama.
-            </p>
+            <h1 class="text-base-content text-blue-700 mb-3 text-5xl font-semibold">Ups...</h1>
+            <h3 class="text-base-content mb-3 text-xl font-semibold">Sepertinya ada yang tersesat</h3>
+            <h6 class="text-base-content mb-6 text-lg max-w-sm">
+                Silahkan kembali ke halaman utama.
+            </h6>
             <button
                 class="relative flex items-center px-6 py-3 overflow-hidden font-medium transition-all bg-blue-500 rounded-md group">
                 <span
