@@ -20,6 +20,7 @@ use App\Livewire\Profile\EditProfile;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Guest\DetailArticle as GuestDetailArticle;
 use App\Livewire\Guest\DetailProfile as GuestDetailProfile;
+use App\Livewire\Guidelines;
 
 Route::get('/', LandingPage::class)->name('landing-page');
 Route::prefix('auth')->middleware('guest')->group(function () {
@@ -36,8 +37,9 @@ Route::get('/detail-article-guest/{slug}', GuestDetailArticle::class)->name('det
 Route::get('/detail-profile-guest/{slug}', GuestDetailProfile::class)->name('detail-profile-guest');
 
 Route::middleware(['auth', 'banned'])->group(function () {
-    Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/profile', Profile::class)->name('profile');
+    Route::get('/guidelines', Guidelines::class)->name('guidelines');
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/profile/edit', EditProfile::class)->name('profile.edit');
     Route::get('/create-article', CreateArticle::class)->name('create-article');
     Route::get('/edit-article/{slug}', EditArticle::class)->name('edit-article');
