@@ -22,13 +22,13 @@
             }
 
             100% {
-                transform: translateX(-50%);
+                transform: translateX(-66.66%);
             }
         }
 
         .animate-scroll {
             display: flex;
-            animation: scroll 10s linear infinite;
+            animation: scroll 15s linear infinite;
         }
     </style>
 </head>
@@ -42,11 +42,11 @@
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
-                navbar.classList.add('bg-gray-900/80', 'backdrop-blur-sm');
-                navbar.classList.remove('bg-gray-900');
+                navbar.classList.add('bg-gray-900/70', 'backdrop-blur-md', 'border-gray-700', 'shadow-lg');
+                navbar.classList.remove('bg-transparent', 'border-transparent');
             } else {
-                navbar.classList.add('bg-gray-900');
-                navbar.classList.remove('bg-gray-900/80', 'backdrop-blur-sm');
+                navbar.classList.add('bg-transparent', 'border-transparent');
+                navbar.classList.remove('bg-gray-900/70', 'backdrop-blur-md', 'border-gray-700', 'shadow-lg');
             }
         });
     </script>
@@ -63,7 +63,7 @@
         const texts = [
             "Update terbaru seputar teknologi",
             "Belajar IT lewat bahasa bayi",
-            "Referensi praktis untuk wawasan dunia digital"
+            "Referensi praktis wawasan dunia digital"
         ];
 
         let index = 0;

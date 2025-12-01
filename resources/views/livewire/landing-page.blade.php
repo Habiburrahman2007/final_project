@@ -1,13 +1,14 @@
 <div>
-    <nav id="navbar" class="bg-gray-900 border-b border-gray-700 fixed top-0 left-0 w-full z-50 shadow-sm">
-        <div class="max-w-screen-xl mx-auto flex items-center justify-between p-4">
-            <a href="{{ route('landing-page') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="{{ asset('img/logo_fp-removebg-preview.png') }}" class="h-8" alt="Logo Flowbite" />
-                <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Ruang IT</span>
+    <nav id="navbar"
+        class="bg-transparent border-b border-transparent fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out">
+        <div class="w-full flex items-center justify-between px-8 py-4">
+            <a href="{{ route('landing-page') }}" class="flex items-center space-x-3 rtl:space-x-reverse mx-3">
+                <img src="{{ asset('img/logo_fp-removebg-preview.png') }}" class="h-10" alt="Logo Flowbite" />
+                <span class="self-center text-3xl font-semibold whitespace-nowrap text-white">Ruang IT</span>
             </a>
 
             <!-- Desktop Menu -->
-            <ul class="hidden md:flex space-x-8 font-medium text-white">
+            <ul class="hidden md:flex space-x-8 font-medium text-white gap-10 mx-3">
                 <li><a href="#about" class="hover:text-blue-500 transition">Tentang</a></li>
                 <li><a href="#categories" class="hover:text-blue-500 transition">Kategori</a></li>
                 <li><a href="#blogs" class="hover:text-blue-500 transition">Blog</a></li>
@@ -19,7 +20,6 @@
                 <button id="hamburgerBtn" type="button"
                     class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                     aria-expanded="false" aria-controls="dropdownMenu">
-                    <span class="sr-only">Buka menu utama</span>
                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 17 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -61,7 +61,7 @@
                     terkini di
                     satu platform.
                 </p>
-                <div class="flex flex-col space-y-4 sm:flex-row justify-center md:justify-start sm:space-y-0">
+                <div class="sm:w-fit w-full flex justify-center md:justify-start">
                     <button
                         class="relative overflow-hidden h-14 w-50 rounded-md bg-blue-800 p-2 flex justify-center items-center font-extrabold text-sky-50 shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] group cursor-pointer">
 
@@ -313,6 +313,35 @@
                             </div>
                         </article>
                     @endforeach
+                    <!-- Duplicate ketiga untuk loop yang lebih smooth -->
+                    @foreach ($articles as $article)
+                        <article class="flex-none w-80 bg-gray-800 rounded-xl p-5 text-white shadow-lg">
+                            <div class="flex items-center gap-x-4 text-xs mb-3">
+                                <time datetime="{{ $article->created_at->toDateString() }}" class="text-gray-400">
+                                    {{ $article->created_at->format('M d, Y') }}
+                                </time>
+                                @if ($article->category->name)
+                                    <span class="rounded-full bg-gray-700 px-2 py-1 text-gray-300 text-xs font-medium">
+                                        {{ $article->category->name }}
+                                    </span>
+                                @endif
+                            </div>
+
+                            <h3 class="text-lg font-semibold mb-2">{{ $article->title }}</h3>
+                            <p class="text-sm text-gray-300 line-clamp-3">
+                                {{ Str::limit(strip_tags($article->content), 120) }}
+                            </p>
+
+                            <div class="flex items-center mt-4 gap-x-3">
+                                <img src="{{ $article->user->photo_profile ?? 'https://via.placeholder.com/40' }}"
+                                    alt="Penulis" class="w-10 h-10 rounded-full object-cover" />
+                                <div class="text-sm">
+                                    <p class="font-semibold">{{ $article->user->name ?? 'Penulis Tidak Dikenal' }}</p>
+                                    <p class="text-gray-400">{{ $article->user->profession ?? 'Kontributor' }}</p>
+                                </div>
+                            </div>
+                        </article>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -334,25 +363,27 @@
                     dan kiat coding yang relevan bagi mahasiswa dan profesional IT. Jelajahi informasi terbaru dan
                     menjadi
                     bagian dari komunitas yang berkembang di era digital.</p>
-                <button
-                    class="relative border hover:border-sky-600 duration-500 group cursor-pointer text-sky-50  overflow-hidden h-14 w-50 rounded-md bg-blue-800 p-2 flex justify-center items-center font-extrabold">
-                    <div
-                        class="absolute z-10 w-40 h-40 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-blue-900 delay-150 group-hover:delay-75">
-                    </div>
-                    <div
-                        class="absolute z-10 w-32 h-32 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-blue-800 delay-150 group-hover:delay-100">
-                    </div>
-                    <div
-                        class="absolute z-10 w-24 h-24 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-blue-700 delay-150 group-hover:delay-150">
-                    </div>
-                    <div
-                        class="absolute z-10 w-16 h-16 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-blue-600 delay-150 group-hover:delay-200">
-                    </div>
-                    <div
-                        class="absolute z-10 w-8 h-8 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-blue-500 delay-150 group-hover:delay-300">
-                    </div>
-                    <p class="z-10"><a href="{{ route('register') }}">Daftar disini</a></p>
-                </button>
+                <div class="sm:w-fit w-full flex justify-center md:justify-start">
+                    <button
+                        class="relative border hover:border-sky-600 duration-500 group cursor-pointer text-sky-50  overflow-hidden h-14 w-50 rounded-md bg-blue-800 p-2 flex justify-center items-center font-extrabold">
+                        <div
+                            class="absolute z-10 w-40 h-40 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-blue-900 delay-150 group-hover:delay-75">
+                        </div>
+                        <div
+                            class="absolute z-10 w-32 h-32 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-blue-800 delay-150 group-hover:delay-100">
+                        </div>
+                        <div
+                            class="absolute z-10 w-24 h-24 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-blue-700 delay-150 group-hover:delay-150">
+                        </div>
+                        <div
+                            class="absolute z-10 w-16 h-16 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-blue-600 delay-150 group-hover:delay-200">
+                        </div>
+                        <div
+                            class="absolute z-10 w-8 h-8 rounded-full group-hover:scale-150 transition-all  duration-500 ease-in-out bg-blue-500 delay-150 group-hover:delay-300">
+                        </div>
+                        <p class="z-10"><a href="{{ route('register') }}">Daftar disini</a></p>
+                    </button>
+                </div>
 
             </div>
         </div>
@@ -414,7 +445,7 @@
             </div>
 
             <p class="text-xs text-gray-500">
-                Hak Cipta ©2025 Dilindungi undang-undang | Dibuat sebagai Proyek Akhir di Politeknik IDN
+                Hak Cipta ©2025 Dilindungi undang-undang | Dibuat sebagai tugas akhir semester 1 di Politeknik IDN
             </p>
         </div>
     </footer>
