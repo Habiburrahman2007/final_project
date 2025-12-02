@@ -184,17 +184,23 @@ class DetailArticle extends Component
             return;
         }
 
+        // Authorization: Only article owner or admin can delete
+        $user = Auth::user();
+        if (!$user || ($article->user_id !== $user->id && $user->role !== 'admin')) {
+            $this->dispatch('showToast', message: 'Error: Anda tidak memiliki akses untuk menghapus artikel ini.', type: 'error');
+            return;
+        }
+
         try {
             if ($article->image) {
                 Storage::disk('public')->delete($article->image);
             }
             $article->delete();
+            session()->flash('article_deleted', true);
             return redirect()->route('dashboard');
         } catch (\Exception $e) {
             $this->dispatch('showToast', message: 'Terjadi kesalahan: ' . $e->getMessage(), type: 'error');
         }
-        session()->flash('article_deleted', true);
-        return redirect()->route('dashboard');
     }
 
 

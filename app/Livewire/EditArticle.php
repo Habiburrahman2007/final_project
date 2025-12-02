@@ -7,6 +7,7 @@ use App\Models\Category;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -17,7 +18,7 @@ class EditArticle extends Component
 
     public $articleId;
     public $title;
-    public $content = ''; 
+    public $content = '';
     public $category_id;
     public $image;
     public $oldImage;
@@ -29,6 +30,12 @@ class EditArticle extends Component
     public function mount($slug)
     {
         $article = Article::where('slug', $slug)->firstOrFail();
+
+        // Authorization: Only article owner can edit
+        if ($article->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $this->articleId = $article->id;
         $this->title = $article->title;
         $this->content = $article->content ?? '';
@@ -43,15 +50,20 @@ class EditArticle extends Component
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $article = Article::findOrFail($this->articleId);
+
+        // Double-check authorization before update
+        if ($article->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
         $slug = Str::slug($this->title);
         $slugCount = Article::where('slug', $slug)
             ->where('id', '!=', $this->articleId)
             ->count();
-        
+
         if ($slugCount > 0) {
             $slug = $slug . '-' . time();
         }
@@ -64,9 +76,12 @@ class EditArticle extends Component
             $imagePath = $this->oldImage;
         }
 
+        // Sanitize HTML content to prevent XSS
+        $sanitizedContent = \App\Helpers\HtmlSanitizer::sanitize($this->content);
+
         $article->update([
             'title' => $this->title,
-            'content' => $this->content,
+            'content' => $sanitizedContent,
             'category_id' => $this->category_id,
             'slug' => $slug,
             'image' => $imagePath,

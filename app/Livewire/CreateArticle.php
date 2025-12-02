@@ -28,7 +28,7 @@ class CreateArticle extends Component
         'title' => 'required|string|max:255',
         'content' => 'required|string',
         'category_id' => 'required|exists:categories,id',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:2048',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
     ];
 
     public function updatedImage()
@@ -46,12 +46,16 @@ class CreateArticle extends Component
     public function save()
     {
         $this->validate();
+
+        // Sanitize HTML content to prevent XSS
+        $sanitizedContent = \App\Helpers\HtmlSanitizer::sanitize($this->content);
+
         $imagePath = $this->image ? $this->image->store('articles', 'public') : null;
         Article::create([
             'user_id' => Auth::id(),
             'title' => $this->title,
             'slug' => Str::slug($this->title) . '-' . uniqid(),
-            'content' => $this->content,
+            'content' => $sanitizedContent,
             'status' => 'active',
             'image' => $imagePath,
             'category_id' => $this->category_id,

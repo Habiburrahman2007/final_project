@@ -41,7 +41,7 @@ Route::middleware(['auth', 'banned'])->group(function () {
     Route::get('/guidelines', Guidelines::class)->name('guidelines');
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/profile/edit', EditProfile::class)->name('profile.edit');
-    Route::get('/create-article', CreateArticle::class)->name('create-article');
+    Route::get('/create-article', CreateArticle::class)->name('create-article')->middleware('throttle:10,60'); // Max 10 articles per hour
     Route::get('/edit-article/{slug}', EditArticle::class)->name('edit-article');
     Route::get('/detail-profile/{slug}', DetailProfile::class)->name('detail-profile');
     Route::get('/detail-article/{slug}', DetailArticle::class)->name('detail-article');
