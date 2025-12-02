@@ -57,6 +57,7 @@ class ArticleControl extends Component
 
     public function loadArticles()
     {
+        $userId = $this->user->id ?? null;
 
         $this->totalArticles = Article::when($this->category !== 'All', function ($query) {
             $query->whereHas('category', fn($q) => $q->where('name', $this->category));
@@ -72,7 +73,15 @@ class ArticleControl extends Component
             })
             ->count();
 
-        $this->articles = Article::with(['user', 'category', 'likes', 'comments'])
+        $this->articles = Article::with(['user', 'category'])
+            ->withCount(['likes', 'comments']) // ✅ Only count
+            ->when($userId, function ($q) use ($userId) {
+                return $q->selectRaw('articles.*, EXISTS(
+                    SELECT 1 FROM likes 
+                    WHERE likes.article_id = articles.id 
+                    AND likes.user_id = ?
+                ) as is_liked', [$userId]);
+            })
             ->when($this->category !== 'All', function ($query) {
                 $query->whereHas('category', fn($q) => $q->where('name', $this->category));
             })
@@ -87,11 +96,7 @@ class ArticleControl extends Component
             })
             ->latest()
             ->take($this->perPage)
-            ->get()
-            ->map(function ($article) {
-                $article->isLiked = $article->likes->where('user_id', $this->user->id ?? null)->count() > 0;
-                return $article;
-            });
+            ->get();
     }
 
     #[On('toggleStatus')]

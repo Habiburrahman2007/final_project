@@ -57,7 +57,15 @@ class Profile extends Component
 
     public function loadArticles()
     {
-        $query = Article::with(['category', 'likes', 'comments'])
+        $userId = $this->user->id;
+
+        $query = Article::with(['category'])
+            ->withCount(['likes', 'comments']) // ✅ Only count
+            ->selectRaw('articles.*, EXISTS(
+                SELECT 1 FROM likes 
+                WHERE likes.article_id = articles.id 
+                AND likes.user_id = ?
+            ) as is_liked', [$userId])
             ->where('user_id', $this->user->id)
             ->when($this->category !== 'All', function ($query) {
                 $query->whereHas('category', fn($q) => $q->where('name', $this->category));
@@ -71,13 +79,7 @@ class Profile extends Component
         $this->articles = $query
             ->latest()
             ->take($this->perPage)
-            ->get()
-            ->map(function ($article) {
-                $article->isLiked = $article->likes()
-                    ->where('user_id', $this->user->id)
-                    ->exists();
-                return $article;
-            });
+            ->get();
     }
 
     public function loadMore()

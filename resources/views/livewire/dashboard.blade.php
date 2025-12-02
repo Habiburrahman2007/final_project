@@ -81,13 +81,13 @@
                                 <button type="button" class="btn btn-link p-2 text-decoration-none"
                                     wire:click="toggleLike({{ $article->id }})">
                                     <i
-                                        class="bi bi-heart{{ $article->isLiked ? '-fill text-danger' : ' text-secondary' }}"></i>
-                                    <small class="text-muted">{{ $article->likes->count() }}</small>
+                                        class="bi bi-heart{{ $article->is_liked ? '-fill text-danger' : ' text-secondary' }}"></i>
+                                    <small class="text-muted">{{ $article->likes_count }}</small>
                                 </button>
 
                                 <button type="button" class="btn btn-link p-2 text-decoration-none">
                                     <i class="bi bi-chat text-secondary"></i>
-                                    <small class="text-muted">{{ $article->comments->count() }}</small>
+                                    <small class="text-muted">{{ $article->comments_count }}</small>
                                 </button>
                             </div>
 

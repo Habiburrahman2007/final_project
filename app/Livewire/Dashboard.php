@@ -63,7 +63,18 @@ class Dashboard extends Component
 
     public function loadArticles()
     {
-        $query = Article::with(['user', 'category', 'likes', 'comments'])
+        $userId = $this->user->id ?? null;
+
+        $query = Article::with(['user', 'category'])
+            ->withCount(['likes', 'comments']) // ✅ Only count, not load all records
+            ->when($userId, function ($q) use ($userId) {
+                // ✅ Add isLiked as computed column
+                return $q->selectRaw('articles.*, EXISTS(
+                    SELECT 1 FROM likes 
+                    WHERE likes.article_id = articles.id 
+                    AND likes.user_id = ?
+                ) as is_liked', [$userId]);
+            })
             ->where('status', 'active')
             ->whereHas('user', fn($q) => $q->where('banned', false))
             ->when(
@@ -83,11 +94,7 @@ class Dashboard extends Component
 
         $this->totalArticles = $query->count();
 
-        $this->articles = $query->take($this->perPage)->get()
-            ->map(function ($article) {
-                $article->isLiked = $article->likes->where('user_id', $this->user->id ?? null)->count() > 0;
-                return $article;
-            });
+        $this->articles = $query->take($this->perPage)->get();
     }
 
     public function loadMore()

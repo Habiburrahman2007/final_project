@@ -17,12 +17,12 @@ class DetailProfile extends Component
     #[Title('Detail Profil')]
 
     public $user;
-    public $articles; 
+    public $articles;
     public $categories = [];
     public $category = 'All';
     public $search = '';
     public $perPage = 9;
-    public $totalFiltered = 0; 
+    public $totalFiltered = 0;
     public $articleCount = 0;
     public $likeCount = 0;
     public $commentCount = 0;
@@ -37,12 +37,24 @@ class DetailProfile extends Component
             $q->where('user_id', $this->user->id);
         })->pluck('name')->toArray();
 
-        $this->loadArticles(); 
+        $this->loadArticles();
     }
 
     public function loadArticles()
     {
-        $baseQuery = $this->user->articles()->with(['category', 'likes', 'comments']);
+        $authUserId = Auth::id();
+
+        $baseQuery = $this->user->articles()
+            ->with(['category'])
+            ->withCount(['likes', 'comments'])
+            ->when($authUserId, function ($q) use ($authUserId) {
+                return $q->selectRaw('articles.*, EXISTS(
+                    SELECT 1 FROM likes 
+                    WHERE likes.article_id = articles.id 
+                    AND likes.user_id = ?
+                ) as is_liked', [$authUserId]);
+            });
+
         if ($this->category !== 'All') {
             $baseQuery->whereHas('category', fn($q) => $q->where('name', $this->category));
         }
@@ -88,7 +100,7 @@ class DetailProfile extends Component
         $article = Article::find($articleId);
 
         if (!$article || !$authUser) {
-            return; 
+            return;
         }
 
         $existingLike = Like::where('user_id', $authUser->id)
