@@ -41,12 +41,13 @@ class Guess extends Component
 
     public function loadCategories()
     {
-        $this->categories = \App\Models\Category::all();
+        $this->categories = \App\Helpers\CategoryCache::all();
     }
 
     public function loadArticles()
     {
-        $query = Article::with(['user', 'category', 'likes', 'comments'])
+        $query = Article::with(['user', 'category'])
+            ->withCount(['likes', 'comments']) // Use withCount to prevent N+1 queries
             ->where('status', 'active')
             ->whereHas('user', fn($q) => $q->where('banned', false))
             ->when(
@@ -68,11 +69,7 @@ class Guess extends Component
         // total artikel untuk kontrol "Load More"
         $this->totalArticles = $query->count();
 
-        $this->articles = $query->take($this->perPage)->get()
-            ->map(function ($article) {
-                $article->isLiked = $article->likes->where('user_id', $this->user->id ?? null)->count() > 0;
-                return $article;
-            });
+        $this->articles = $query->take($this->perPage)->get();
     }
 
     public function loadMore()

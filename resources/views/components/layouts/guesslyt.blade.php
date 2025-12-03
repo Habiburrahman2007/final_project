@@ -87,56 +87,28 @@
                                 <a href="{{ route('register') }}" wire:navigate
                                     class="btn btn-outline-primary">Daftar</a>
                             </div>
-
-                            <!-- Mobile Menu -->
-                            <div class="d-md-none dropdown">
-                                <a href="#" id="mobileMenuDropdown" data-bs-toggle="dropdown"
-                                    aria-expanded="false" class="text-white">
-                                    <i class="fa-solid fa-bars fs-2"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end shadow-lg"
-                                    aria-labelledby="mobileMenuDropdown">
-                                    <li><a class="dropdown-item" wire:navigate href="{{ route('login') }}">Login</a>
-                                    </li>
-                                    <li><a class="dropdown-item" wire:navigate
-                                            href="{{ route('register') }}">Register</a></li>
-                                </ul>
-                            </div>
                         </div>
-                    </div>
-                </div>
-            </header>
+                        <script src="{{ asset('dist/assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
+                        <script src="{{ asset('dist/assets/static/js/pages/dashboard.js') }}"></script>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", () => {
+                                const navbar = document.getElementById("navbar");
 
-            <div class="content-wrapper container">
-                {{ $slot }}
-            </div>
-
-        </div>
-    </div>
-    <script src="{{ asset('dist/assets/static/js/components/dark.js') }}"></script>
-    <script src="{{ asset('dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
-    <script src="{{ asset('dist/assets/compiled/js/app.js') }}"></script>
-    <script src="{{ asset('dist/assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('dist/assets/static/js/pages/dashboard.js') }}"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const navbar = document.getElementById("navbar");
-
-            function updateNavbar() {
-                if (window.scrollY > 10) {
-                    navbar.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-                    navbar.style.backdropFilter = "blur(10px)";
-                    navbar.style.webkitBackdropFilter = "blur(10px)";
-                } else {
-                    navbar.style.backgroundColor = "transparent";
-                    navbar.style.backdropFilter = "none";
-                    navbar.style.boxShadow = "none";
-                }
-            }
-            updateNavbar();
-            window.addEventListener("scroll", updateNavbar);
-        });
-    </script>
+                                function updateNavbar() {
+                                    if (window.scrollY > 10) {
+                                        navbar.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+                                        navbar.style.backdropFilter = "blur(10px)";
+                                        navbar.style.webkitBackdropFilter = "blur(10px)";
+                                    } else {
+                                        navbar.style.backgroundColor = "transparent";
+                                        navbar.style.backdropFilter = "none";
+                                        navbar.style.boxShadow = "none";
+                                    }
+                                }
+                                updateNavbar();
+                                window.addEventListener("scroll", updateNavbar);
+                            });
+                        </script>
 
 </body>
 

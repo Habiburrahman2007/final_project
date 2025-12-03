@@ -23,6 +23,9 @@
     <div class="flex flex-col justify-center items-center min-h-screen py-5 px-4 w-full bg-cover bg-center"
         style="background-image: url('{{ asset('img/bg-auth.jpeg') }}');">
         {{ $slot }}
+
+        {{-- Toast Notifications --}}
+        <x-toast />
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

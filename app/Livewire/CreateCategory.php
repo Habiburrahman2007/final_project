@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use App\Models\Category;
+use Illuminate\Support\Facades\Log;
 
 class CreateCategory extends Component
 {
@@ -33,12 +34,30 @@ class CreateCategory extends Component
             'color' => 'required|in:' . implode(',', array_keys($this->colorOptions)),
         ]);
 
-        Category::create([
-            'name' => $this->name,
-            'color' => $this->color,
-        ]);
+        try {
+            Category::create([
+                'name' => $this->name,
+                'color' => $this->color,
+            ]);
 
-        session()->flash('category_created', true);
-        return redirect()->to('/admin/category');
+            // Clear category cache so new category appears immediately
+            \App\Helpers\CategoryCache::flush();
+
+            session()->flash('category_created', true);
+            return redirect()->to('/admin/category');
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::error('Failed to create category', [
+                'name' => $this->name,
+                'error' => $e->getMessage()
+            ]);
+
+            session()->flash('error', 'Gagal membuat kategori. Silakan coba lagi.');
+        } catch (\Exception $e) {
+            Log::error('Unexpected error in CreateCategory', [
+                'error' => $e->getMessage()
+            ]);
+
+            session()->flash('error', 'Terjadi kesalahan. Silakan hubungi administrator.');
+        }
     }
 }

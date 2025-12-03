@@ -9,6 +9,7 @@ use App\Models\Category;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 
 class Dashboard extends Component
@@ -40,7 +41,7 @@ class Dashboard extends Component
 
     public function loadCategories()
     {
-        $this->categories = Category::all();
+        $this->categories = \App\Helpers\CategoryCache::all();
     }
 
     public function updatedSearch()
@@ -113,20 +114,28 @@ class Dashboard extends Component
         $user = $this->user;
         if (!$user) return;
 
-        $like = Like::where('user_id', $user->id)
-            ->where('article_id', $articleId)
-            ->first();
+        try {
+            $like = Like::where('user_id', $user->id)
+                ->where('article_id', $articleId)
+                ->first();
 
-        if ($like) {
-            $like->delete();
-        } else {
-            Like::create([
+            if ($like) {
+                $like->delete();
+            } else {
+                Like::create([
+                    'user_id' => $user->id,
+                    'article_id' => $articleId,
+                ]);
+            }
+
+            $this->loadArticles();
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::error('Failed to toggle like', [
                 'user_id' => $user->id,
                 'article_id' => $articleId,
+                'error' => $e->getMessage()
             ]);
         }
-
-        $this->loadArticles();
     }
 
     public function setCategory($category)
