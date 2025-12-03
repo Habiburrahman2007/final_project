@@ -18,7 +18,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21                  # KEMBALIKAN KE 21 (Wajib untuk action ini)
           protocol: ftps            # Gunakan 'ftps' (Secure FTP)
-          security: strict          # Gunakan 'strict' untuk mencegah pemutusan koneksi (FIN Error)
+          security: loose          # Gunakan 'strict' untuk mencegah pemutusan koneksi (FIN Error)
           local-dir: ./
           server-dir: /public_html/
           exclude: |
