@@ -10,39 +10,23 @@ jobs:
     name: 🎉 Deploy to FTP
     runs-on: ubuntu-latest
     steps:
-      # 1. Mengambil kode terbaru dari repo
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v4
-
-      # 2. Setup PHP (sesuaikan versinya dengan server hosting kamu)
-      - name: 🟢 Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, bcmath, ctype, fileinfo, openssl, pdo, pdo_mysql, tokenizer, xml
-
-      # 3. Install dependency Composer (tanpa dev dependencies agar ringan)
-      - name: 📦 Install Composer Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-dev
-
-      # 4. Install & Build Frontend Assets (Vite/NPM)
-      - name: 🎨 Build Frontend Assets
-        run: |
-          npm install
-          npm run build
-
-      # 5. Proses Upload ke Hosting via FTP
       - name: 📂 Sync files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /public_html/  # Folder tujuan di hosting (sesuaikan!)
+          server-dir: /public_html/
+          protocol: ftp    # TAMBAHAN: Paksa protocol FTP biasa
+          port: 21         # TAMBAHAN: Paksa port 21
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
+            **/tests/**
+            .editorconfig
+            .env.example
+            README.md
             **/tests/**
             .editorconfig
             .env.example
