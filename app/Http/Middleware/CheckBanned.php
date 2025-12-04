@@ -13,19 +13,15 @@ class CheckBanned
      */
     public function handle(Request $request, Closure $next)
     {
-        // Jika ada user dan dia dibanned
         if (Auth::check() && (bool) Auth::user()->banned) {
-            // logout user, invalidate session, regenerasi token
             Auth::logout();
 
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            // redirect ke halaman login dengan pesan flash
             return redirect()->route('login')->withErrors([
-                'email' => 'Akun Anda telah diblokir (banned). Hubungi admin.'
+                'email' => 'Akun Anda telah diblokir. Hubungi admin untuk informasi lebih lanjut.'
             ]);
-            // atau: abort(403, 'Account banned.');
         }
 
         return $next($request);

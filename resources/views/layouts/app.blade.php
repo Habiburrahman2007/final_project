@@ -112,7 +112,7 @@
     <script src="{{ asset('dist/assets/static/js/initTheme.js') }}" data-navigate-once="true"></script>
     <div id="app">
 
-        @include('components.layouts.sidebar')
+        @include('layouts.sidebar')
 
         <div id="main">
             @persist('header')

@@ -31,10 +31,9 @@ use App\Livewire\Guest\DetailProfile as GuestDetailProfile;
 use App\Livewire\Guest\Index as GuestIndex;
 
 // Profile Components
-// TODO: Create Profile Livewire components
-// use App\Livewire\Profile\Detail as DetailProfile;
-// use App\Livewire\Profile\Edit as EditProfile;
-// use App\Livewire\Profile\Index as ProfileIndex;
+use App\Livewire\Profile\Detail as DetailProfile;
+use App\Livewire\Profile\Edit as EditProfile;
+use App\Livewire\Profile\Index as ProfileIndex;
 
 // PUBLIC ROUTES
 
@@ -62,6 +61,11 @@ Route::middleware(['auth', 'banned'])->group(function () {
     // Dashboard & Guidelines
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/guidelines', Guidelines::class)->name('guidelines');
+
+    // Profile Routes
+    Route::get('/profile', ProfileIndex::class)->name('profile');
+    Route::get('/profile/edit', EditProfile::class)->name('profile-edit');
+    Route::get('/detail-profile/{slug}', DetailProfile::class)->name('detail-profile');
 
     // Article Routes
     Route::get('/create-article', CreateArticle::class)
