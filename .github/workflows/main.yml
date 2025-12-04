@@ -1,72 +1,36 @@
-name: Deploy Laravel to cPanel
-
+name: Deploy Laravel Project on push to cpanel
 on:
   push:
     branches:
       - main
 
 jobs:
-  deploy:
-    name: Deploy to cPanel
+  web-deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-    
     steps:
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v3
-
-      - name: 🔧 Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, xml, bcmath, pdo, mysql
-          coverage: none
-
-      - name: 📦 Install Composer Dependencies
-        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
-
-      - name: 🔧 Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: 📦 Install NPM Dependencies
-        run: npm ci
-
-      - name: 🏗️ Build Assets
-        run: npm run build
-
-      - name: 📁 Create deployment directories
-        run: |
-          mkdir -p bootstrap/cache
-          mkdir -p storage/framework/{sessions,views,cache}
-          mkdir -p storage/logs
-
-      - name: 🔐 Set Directory Permissions
-        run: |
-          chmod -R 755 storage
-          chmod -R 755 bootstrap/cache
-
-      - name: 📂 Deploy to cPanel via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Get the latest code
+        uses: actions/checkout@v2.3.2
+      - uses: actions/setup-node@master
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - name: Directory Permissions
+        run: chmod -R 777 storage bootstrap/cache
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          server-dir: /
           exclude: |
             **/.git*
-            **/.git*/**
             **/node_modules/**
+            **/bootstrap/**
+            **/database/**
+            **/public/**
+            **/storage/**
+            **/stubs/**
             **/tests/**
-            **/.env
-            **/.env.example
-            **/.editorconfig
-            **/.gitignore
-            **/.gitattributes
-            **/phpunit.xml
-            **/README.md
-            **/package.json
-            **/package-lock.json
-            **/vite.config.js
-            **/tailwind.config.js
-            **/.github/**
+            **/vendor/**
+            **.env
