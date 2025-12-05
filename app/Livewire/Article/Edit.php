@@ -127,12 +127,9 @@ class Edit extends Component
                 $imagePath = $this->oldImage;
             }
 
-            // Sanitize HTML content to prevent XSS
-            $sanitizedContent = \App\Helpers\HtmlSanitizer::sanitize($this->content);
-
             $article->update([
                 'title' => $this->title,
-                'content' => $sanitizedContent,
+                'content' => $this->content,
                 'category_id' => $this->category_id,
                 'slug' => $slug,
                 'image' => $imagePath,

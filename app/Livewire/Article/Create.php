@@ -3,7 +3,8 @@
 namespace App\Livewire\Article;
 
 use App\Models\Article;
-use App\Models\Category;
+use Illuminate\Database\QueryException;
+use App\Helpers\CategoryCache;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
@@ -49,27 +50,12 @@ class Create extends Component
                 $this->image = null;
                 return;
             }
-
-            // Step 3: CRITICAL - Validate magic bytes (actual file content)
-            $imageInfo = @getimagesize($this->image->getRealPath());
-            if (!$imageInfo) {
-                $this->addError('image', 'File bukan gambar yang valid atau file rusak.');
-                $this->image = null;
-                return;
-            }
-
-            // Step 4: Validate dimensions
-            [$width, $height] = $imageInfo;
-            if ($width < 100 || $height < 100 || $width > 4000 || $height > 4000) {
-                $this->addError('image', 'Ukuran gambar harus antara 100x100 dan 4000x4000 pixels.');
-                $this->image = null;
-            }
         }
     }
 
     public function mount()
     {
-        $this->categories = \App\Helpers\CategoryCache::all();
+        $this->categories = CategoryCache::all();
     }
 
     public function save()
@@ -77,9 +63,6 @@ class Create extends Component
         $this->validate();
 
         try {
-            // Sanitize HTML content to prevent XSS
-            $sanitizedContent = \App\Helpers\HtmlSanitizer::sanitize($this->content);
-
             // Secure file upload with random filename
             if ($this->image) {
                 $extension = $this->image->getClientOriginalExtension();
@@ -93,7 +76,7 @@ class Create extends Component
                 'user_id' => Auth::id(),
                 'title' => $this->title,
                 'slug' => Str::slug($this->title) . '-' . uniqid(),
-                'content' => $sanitizedContent,
+                'content' => $this->content,
                 'status' => 'active',
                 'image' => $imagePath,
                 'category_id' => $this->category_id,
@@ -101,7 +84,7 @@ class Create extends Component
 
             session()->flash('article_created', true);
             return redirect()->route('dashboard');
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             Log::error('Failed to create article', [
                 'user_id' => Auth::id(),
                 'error' => $e->getMessage()
