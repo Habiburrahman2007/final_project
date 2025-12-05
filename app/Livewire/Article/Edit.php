@@ -3,7 +3,8 @@
 namespace App\Livewire\Article;
 
 use App\Models\Article;
-use App\Models\Category;
+use Illuminate\Database\QueryException;
+use App\Helpers\CategoryCache;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
@@ -34,7 +35,7 @@ class Edit extends Component
 
         // Authorization: Only article owner can edit
         if ($article->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
+            abort(403, 'Anda tidak memiliki akses untuk mengedit artikel ini.');
         }
 
         $this->articleId = $article->id;
@@ -42,7 +43,7 @@ class Edit extends Component
         $this->content = $article->content ?? '';
         $this->category_id = $article->category_id;
         $this->oldImage = $article->image;
-        $this->categories = \App\Helpers\CategoryCache::all();
+        $this->categories = CategoryCache::all();
     }
 
     public function updatedImage()
@@ -62,21 +63,6 @@ class Edit extends Component
                 $this->image = null;
                 return;
             }
-
-            // Step 3: CRITICAL - Validate magic bytes (actual file content)
-            $imageInfo = @getimagesize($this->image->getRealPath());
-            if (!$imageInfo) {
-                $this->addError('image', 'File bukan gambar yang valid atau file rusak.');
-                $this->image = null;
-                return;
-            }
-
-            // Step 4: Validate dimensions
-            [$width, $height] = $imageInfo;
-            if ($width < 100 || $height < 100 || $width > 4000 || $height > 4000) {
-                $this->addError('image', 'Ukuran gambar harus antara 100x100 dan 4000x4000 pixels.');
-                $this->image = null;
-            }
         }
     }
 
@@ -94,7 +80,7 @@ class Edit extends Component
 
             // Double-check authorization before update
             if ($article->user_id !== Auth::id()) {
-                abort(403, 'Unauthorized action.');
+                abort(403, 'Anda tidak memiliki akses untuk mengedit artikel ini.');
             }
 
             $slug = Str::slug($this->title);
@@ -137,7 +123,7 @@ class Edit extends Component
 
             session()->flash('article_updated', true);
             return redirect()->route('dashboard');
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             Log::error('Failed to update article', [
                 'article_id' => $this->articleId,
                 'user_id' => Auth::id(),

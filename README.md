@@ -27,13 +27,13 @@ Aplikasi ini adalah platform manajemen konten dan blogging berbasis web yang mod
 ### Backend
 - **Laravel 12**: Framework PHP modern yang kuat dan ekspresif.
 - **PHP 8.2+**: Bahasa pemrograman server-side.
-- **SQLite / MySQL**: Sistem manajemen basis data.
+- **MySQL**: Sistem manajemen basis data.
 
 ### Frontend
 - **Livewire 3.6**: Framework full-stack untuk antarmuka dinamis tanpa meninggalkan PHP.
 - **TailwindCSS 4**: Framework CSS utility-first untuk desain yang cepat dan kustom.
-- **Alpine.js**: Framework JavaScript ringan untuk interaktivitas.
 - **Flowbite**: Komponen UI berbasis Tailwind CSS.
+- **Mazer**: Template UI yang modern dan responsive berbasis Bootstrap.
 
 ## Cara Instalasi
 
