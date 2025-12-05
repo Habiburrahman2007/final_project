@@ -33,7 +33,6 @@ class Edit extends Component
     {
         $article = Article::where('slug', $slug)->firstOrFail();
 
-        // Authorization: Only article owner can edit
         if ($article->user_id !== Auth::id()) {
             abort(403, 'Anda tidak memiliki akses untuk mengedit artikel ini.');
         }
@@ -48,98 +47,67 @@ class Edit extends Component
 
     public function updatedImage()
     {
-        // Step 1: Basic Laravel validation
         $this->validate([
-            'image' => 'image|max:2048',
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
-
-        if ($this->image) {
-            // Step 2: Validate server-detected MIME type
-            $mimeType = $this->image->getMimeType();
-            $allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
-
-            if (!in_array($mimeType, $allowedMimes)) {
-                $this->addError('image', 'Tipe file tidak valid. Hanya JPG, PNG, dan WebP yang diperbolehkan.');
-                $this->image = null;
-                return;
-            }
-        }
     }
+
 
     public function update()
     {
         $this->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'title'        => 'required|string|max:255',
+            'content'      => 'required|string',
+            'category_id'  => 'required|exists:categories,id',
+            'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         try {
             $article = Article::findOrFail($this->articleId);
 
-            // Double-check authorization before update
             if ($article->user_id !== Auth::id()) {
                 abort(403, 'Anda tidak memiliki akses untuk mengedit artikel ini.');
             }
-
             $slug = Str::slug($this->title);
-            $slugCount = Article::where('slug', $slug)
-                ->where('id', '!=', $this->articleId)
-                ->count();
-
-            if ($slugCount > 0) {
-                $slug = $slug . '-' . time();
+            if (Article::where('slug', $slug)->where('id', '!=', $this->articleId)->exists()) {
+                $slug .= '-' . time();
             }
 
+            $imagePath = $this->oldImage;
             if ($this->image) {
-                // Secure file upload with random filename
-                $extension = $this->image->getClientOriginalExtension();
-                $filename = uniqid('article_', true) . '_' . bin2hex(random_bytes(8)) . '.' . $extension;
+                $filename  = uniqid('article_', true) . '.' . $this->image->getClientOriginalExtension();
                 $imagePath = $this->image->storeAs('articles', $filename, 'public');
 
-                // Delete old image only after new one is successfully stored
-                if ($this->oldImage && Storage::disk('public')->exists($this->oldImage)) {
-                    try {
-                        Storage::disk('public')->delete($this->oldImage);
-                    } catch (\Exception $e) {
-                        Log::warning('Failed to delete old image', [
-                            'path' => $this->oldImage,
-                            'error' => $e->getMessage()
-                        ]);
-                    }
+                if ($this->oldImage) {
+                    Storage::disk('public')->delete($this->oldImage);
                 }
-            } else {
-                $imagePath = $this->oldImage;
             }
 
             $article->update([
-                'title' => $this->title,
-                'content' => $this->content,
+                'title'       => $this->title,
+                'content'     => $this->content,
                 'category_id' => $this->category_id,
-                'slug' => $slug,
-                'image' => $imagePath,
+                'slug'        => $slug,
+                'image'       => $imagePath,
             ]);
 
             session()->flash('article_updated', true);
             return redirect()->route('dashboard');
-        } catch (QueryException $e) {
-            Log::error('Failed to update article', [
-                'article_id' => $this->articleId,
-                'user_id' => Auth::id(),
-                'error' => $e->getMessage()
-            ]);
-
-            session()->flash('error', 'Gagal mengupdate artikel. Silakan coba lagi.');
         } catch (\Exception $e) {
-            Log::error('Unexpected error in EditArticle', [
+            $type = $e instanceof QueryException
+                ? 'DB Error'
+                : 'General Error';
+
+            Log::error("$type saat update article", [
                 'article_id' => $this->articleId,
-                'error' => $e->getMessage()
+                'user_id'    => Auth::id(),
+                'error'      => $e->getMessage(),
             ]);
 
-            session()->flash('error', 'Terjadi kesalahan. Silakan hubungi administrator.');
+            session()->flash('error', 'Terjadi kesalahan. Silakan coba lagi.');
         }
     }
+
 
     public function render()
     {
