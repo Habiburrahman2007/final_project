@@ -146,9 +146,8 @@
     </div>
 
     <!-- ApexCharts Script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.45.1/apexcharts.min.js"
-        integrity="sha512-vD54YAf6El2OBej64SujWFLztu5selS4iZt4c2OJfCDYLD4km52r4dPSzhcdJ8XaOk3l4eauvRzRCVjJSndY8A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.45.1/apexcharts.min.js" crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
 
     <script>
         // 1. Variabel Global untuk menyimpan instance chart
@@ -172,14 +171,26 @@
                 pieChart.destroy();
             }
 
+            // D. Ambil data dari PHP
+            const series = @json($categoryArticleCounts ?? []);
+            const labels = @json($categoryNames ?? []);
+            const colors = @json($categoryColors ?? []);
+
+            // E. Validasi data - cek jika kosong atau tidak valid
+            if (!series || series.length === 0 || !labels || labels.length === 0) {
+                chartElement.innerHTML =
+                    '<div class="text-center py-5 text-muted"><i class="fa-solid fa-chart-pie fa-3x mb-3"></i><p>Tidak ada data kategori untuk ditampilkan</p></div>';
+                return;
+            }
+
             const pieOptions = {
                 chart: {
                     type: 'pie',
                     height: 400
                 },
-                series: @json($categoryArticleCounts ?? []),
-                labels: @json($categoryNames ?? []),
-                colors: @json($categoryColors ?? []),
+                series: series,
+                labels: labels,
+                colors: colors,
                 legend: {
                     position: 'bottom',
                     formatter: function(seriesName, opts) {
@@ -197,7 +208,7 @@
                 }
             };
 
-            // D. Render Chart Baru
+            // F. Render Chart Baru
             pieChart = new ApexCharts(chartElement, pieOptions);
             pieChart.render();
         }

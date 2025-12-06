@@ -1,5 +1,17 @@
 window.initDashboard = function () {
 
+  // Early return if no dashboard chart elements exist
+  const hasChartElements = document.querySelector("#chart-profile-visit") ||
+    document.querySelector("#chart-visitors-profile") ||
+    document.querySelector("#chart-europe");
+
+  if (!hasChartElements) {
+    console.log('No chart elements found, skipping dashboard initialization');
+    return; // Exit early if we're not on dashboard page
+  }
+
+  console.log('Initializing dashboard charts...');
+
   var optionsProfileVisit = {
     annotations: { position: "back" },
     dataLabels: { enabled: false },
@@ -54,9 +66,13 @@ window.initDashboard = function () {
   function renderChart(selector, options) {
     var el = document.querySelector(selector);
     if (el) {
-      el.innerHTML = ""; // Clear previous chart
-      var chart = new ApexCharts(el, options);
-      chart.render();
+      try {
+        el.innerHTML = ""; // Clear previous chart
+        var chart = new ApexCharts(el, options);
+        chart.render();
+      } catch (error) {
+        console.error(`Error rendering chart ${selector}:`, error);
+      }
     }
   }
 

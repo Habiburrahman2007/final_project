@@ -118,7 +118,8 @@
         <div id="main">
             @persist('header')
                 <header class="mb-3">
-                    <a href="#" class="burger-btn d-block d-xl-none fixed-hamburger">
+                    <a href="#" class="burger-btn d-block d-xl-none fixed-hamburger"
+                        style="position: fixed; top: 20px; left: 20px; z-index: 1000; background: var(--bs-body-bg); padding: 10px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                         <i class="bi bi-justify fs-3"></i>
                     </a>
                 </header>

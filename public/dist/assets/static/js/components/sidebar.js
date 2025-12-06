@@ -28,6 +28,9 @@ const calculateChildrenHeight = (el, deep = false) => {
   return height
 }
 
+// Global flag to track if event delegation is set up
+let globalEventDelegationSetup = false;
+
 /**
  * a Sidebar component
  * @param  {HTMLElement} el - sidebar element
@@ -44,13 +47,42 @@ class Sidebar {
    * initialize the sidebar
    */
   init() {
-    // add event listener to sidebar
-    document
-      .querySelectorAll(".burger-btn")
-      .forEach((el) => el.addEventListener("click", this.toggle.bind(this)))
-    document
-      .querySelectorAll(".sidebar-hide")
-      .forEach((el) => el.addEventListener("click", this.toggle.bind(this)))
+    console.log('Sidebar init() called');
+    console.log('Sidebar element:', this.sidebarEL);
+    console.log('Global delegation setup:', globalEventDelegationSetup);
+
+    // Setup event delegation only once globally
+    if (!globalEventDelegationSetup) {
+      console.log('Setting up global event delegation for burger buttons');
+
+      // Use event delegation for burger button and sidebar-hide
+      // This way events will work even after Livewire navigation
+      document.addEventListener('click', (e) => {
+        const burgerBtn = e.target.closest('.burger-btn');
+        const sidebarHide = e.target.closest('.sidebar-hide');
+
+        if (burgerBtn) {
+          console.log('Burger button clicked via delegation');
+          e.preventDefault();
+          // Find the sidebar instance
+          const sidebar = document.getElementById('sidebar');
+          if (sidebar && window.sidebarInstance) {
+            window.sidebarInstance.toggle();
+          }
+        } else if (sidebarHide) {
+          console.log('Sidebar hide clicked via delegation');
+          e.preventDefault();
+          // Find the sidebar instance
+          const sidebar = document.getElementById('sidebar');
+          if (sidebar && window.sidebarInstance) {
+            window.sidebarInstance.toggle();
+          }
+        }
+      });
+
+      globalEventDelegationSetup = true;
+    }
+
     window.addEventListener("resize", this.onResize.bind(this))
 
 
@@ -278,16 +310,33 @@ else {
 // NOTE make Sidebar method as a global function
 window.Sidebar = Sidebar
 
-if (sidebarEl) {
-  // initialize
-  const sidebar = new window.Sidebar(sidebarEl)
+// Initialize sidebar
+const initializeSidebar = () => {
+  console.log('initializeSidebar() called');
+  sidebarEl = document.getElementById("sidebar")
+  if (sidebarEl) {
+    console.log('Sidebar element found, initializing...');
+    onFirstLoad(sidebarEl)
+    // Store instance globally so event delegation can access it
+    window.sidebarInstance = new window.Sidebar(sidebarEl)
+    console.log('Sidebar instance created:', window.sidebarInstance);
+  } else {
+    console.log('Sidebar element NOT found!');
+  }
 }
+
+// Initial load
+initializeSidebar()
+
+// Reinitialize sidebar after Livewire navigation
+document.addEventListener('livewire:navigated', () => {
+  initializeSidebar()
+})
 
 // NOTE use this to reinitialize sidebar with recalculate height
 // NOTE fixed dropdown smooth animation
-/* 
+/*
 const sidebar = new window.Sidebar(document.getElementById("sidebar"), {
   recalculateHeight: true
 }) 
 */
-
